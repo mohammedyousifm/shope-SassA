@@ -1,0 +1,49 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+
+class Clentnotification extends Model
+{
+    protected $table = 'clent_notification';
+    use HasFactory;
+
+    protected $fillable = [
+        'client_id',
+        'sender_id',
+        'type',
+        'data',
+        'read_at',
+    ];
+
+    protected $casts = [
+        'data' => 'array',
+        'read_at' => 'datetime',
+    ];
+
+    /**
+     * المستخدم المستلم للإشعار
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    /**
+     * الأدمن / المرسل
+     */
+    public function sender()
+    {
+        return $this->belongsTo(User::class, 'sender_id');
+    }
+
+    /**
+     * هل الإشعار مقروء؟
+     */
+    public function isRead(): bool
+    {
+        return ! is_null($this->read_at);
+    }
+}
